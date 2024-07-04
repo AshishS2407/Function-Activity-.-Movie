@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <style>
+        ul {
+            list-style-type: none;
+
+        }
+
+        li {
+            margin: 5px 0;
+
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: grey;
+        }
+
+        .category-food {
+            color: green;
+        }
+
+        .category-transport {
+            color: blue;
+        }
+
+        .category-entertainmentw {
+            color: purple;
+        }
+
+        .movie {
+            color: aqua;
+
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Expense Tracker</h1>
+    <label for="expd">Expense Description:</label>
+    <input type="text" id="expd" required> <br> <br>
+    <label for="expa">Expense Amount:</label>
+    <input type="text" id="expa" required> <br> <br>
+    <label for="priority">Enter category (1-Food, 2-Transport, 3-Entertainment):</label>
+    <input type="text" id="priority"> <br> <br>
+    <button onclick="addExp()">Add Movie</button>
+    <ul id="List"></ul>
+
+    <script>
+
+        let Expense = [];
+        let Amount = [];
+        let Priority = [];
+
+
+
+        function addExp() {
+            const ExpenseInput = document.getElementById('expd');
+            const AmountInput = document.getElementById('expa');
+            const PriorityInput = document.getElementById('priority');
+            const List = document.getElementById('List');
+
+            let expense = ExpenseInput.value.trim();
+            let amount = AmountInput.value.trim ();
+            let priority = Number(PriorityInput.value.trim());
+
+            if (expense !== '' && !isNaN(priority) && priority >= 1 && priority <= 3 && amount !== '') {
+                Expense.push(expense);
+                Amount.push(amount)
+                Priority.push(priority);
+
+                const li = document.createElement('li');
+                li.textContent = expense;
+
+                switch (priority) {
+                    case 1:
+                        li.classList.add('category-food');
+                        break;
+                    case 2:
+                        li.classList.add('category-transport');
+                        break;
+                    case 3:
+                        li.classList.add('category-entertainment');
+                        break;
+                }
+
+                const completeButton = document.createElement('button');
+                completeButton.textContent = 'Completed';
+                completeButton.onclick = function () {
+                    li.classList.toggle('completed');
+                };
+                li.appendChild(completeButton);
+
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.onclick = function () {
+                    const newExpense = prompt('Edit Expense Details ', expense);
+                    if (newExpense !== null && newExpense.trim() !== '') {
+                        const Index = Expense.indexOf(expense);
+                        Expense[Index] = newExpense; 
+                        li.firstChild.textContent = newExpense; 
+                        expense = newExpense; 
+                    }
+
+                    const newPriority = prompt('Edit Priority: ', priority);
+                    if (newPriority !== null && newPriority.trim() !== '') {
+                        const priorityIndex = Priority.indexOf(priority);
+                        Priority[priorityIndex] = newPriority;
+                        priority = newPriority;
+
+                        switch (parseInt(newPriority)) {
+                            case 1:
+                                li.classList.add('category-food');
+                                break;
+                            case 2:
+                                li.classList.add('category-transport');
+                                break;
+                            case 3:
+                                li.classList.add('category-entertainment');
+                                break;
+                        }
+                    }
+
+
+                };
+                li.appendChild(editButton);
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.onclick = function () {
+                    List.removeChild(li);
+                    const Index = Expense.indexOf(expense);
+                    Expense.splice(Index, 1);
+                    Priority.splice(Index, 1);
+                };
+                li.appendChild(removeButton);
+
+
+                List.appendChild(li);
+                ExpenseInput.value = '';
+                PriorityInput.value = '';
+                AmountInput.value = '';
+
+            } else {
+                alert('Please enter the correct category');
+            }
+        }
+    </script>
+</body>
+
+</html>
